@@ -1,0 +1,23 @@
+total 224
+drwxr-xr-x   3 dp  staff     96 Oct 15 13:59 __pycache__
+drwxr-xr-x  22 dp  staff    704 Oct 22 12:58 .
+drwxr-xr-x  11 dp  staff    352 Oct 15 13:59 ..
+drwxr-xr-x  12 dp  staff    384 Oct 21 22:00 .git
+drwxr-xr-x   4 dp  staff    128 Oct 15 13:59 .github
+-rw-r--r--   1 dp  staff      8 Oct 15 13:59 .gitignore
+drwxr-xr-x   3 dp  staff     96 Oct 22 12:59 data
+-rwxr-xr-x   1 dp  staff  13266 Oct 15 13:59 generate_data.py
+-rw-r--r--   1 dp  staff  14662 Oct 15 13:59 GRADING_SPEC.md
+drwxr-xr-x   2 dp  staff     64 Oct 22 12:58 output
+-rwxr-xr-x@  1 dp  staff    658 Oct 22 08:56 q1_setup_project.sh
+-rw-r--r--   1 dp  staff     58 Oct 15 13:59 q2_config.txt
+-rwxr-xr-x   1 dp  staff   2901 Oct 15 13:59 q2_process_metadata.py
+-rw-r--r--   1 dp  staff   5849 Oct 15 13:59 q3_data_utils.py
+-rw-r--r--   1 dp  staff   7309 Oct 15 13:59 q4_exploration.ipynb
+-rw-r--r--   1 dp  staff   4824 Oct 15 13:59 q5_missing_data.ipynb
+-rw-r--r--   1 dp  staff   6194 Oct 15 13:59 q6_transformation.ipynb
+-rw-r--r--   1 dp  staff   4995 Oct 15 13:59 q7_aggregation.ipynb
+-rwxr-xr-x   1 dp  staff    908 Oct 15 13:59 q8_run_pipeline.sh
+-rw-r--r--   1 dp  staff  12595 Oct 15 13:59 README.md
+drwxr-xr-x   3 dp  staff     96 Oct 22 12:58 reports
+-rw-r--r--   1 dp  staff     91 Oct 15 13:59 requirements.txt
