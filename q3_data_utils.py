@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 
 
-def load_data(filepath: str) -> pd.DataFrame:
+def load_data(file:str) -> pd.DataFrame:
     """
     Load CSV file into DataFrame.
 
@@ -23,6 +23,8 @@ def load_data(filepath: str) -> pd.DataFrame:
         >>> df.shape
         (10000, 18)
     """
+    df = pd.read_csv(file)
+    return df
     pass
 
 
@@ -42,6 +44,9 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
     Example:
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
+    df.drop_duplicates()
+    df.replace(sentinel_value, np.nan)
+    return df
     pass
 
 
@@ -60,10 +65,12 @@ def detect_missing(df: pd.DataFrame) -> pd.Series:
         >>> missing['age']
         15
     """
+    count = df.isnull().sum()
+    return count
     pass
 
 
-def fill_missing(df: pd.DataFrame, column: str, strategy: str = 'mean') -> pd.DataFrame:
+def fill_missing(df: pd.DataFrame, column: str, strategy: str) -> pd.DataFrame:
     """
     Fill missing values in a column using specified strategy.
 
@@ -78,6 +85,15 @@ def fill_missing(df: pd.DataFrame, column: str, strategy: str = 'mean') -> pd.Da
     Example:
         >>> df_filled = fill_missing(df, 'age', strategy='median')
     """
+    if strategy == "median":
+        df[column] = df[column].fillna(df[column].median())
+    elif strategy == "mean":
+        df[column] = df[column].fillna(df[column].mean())
+    elif strategy == "ffill":
+        df[column] = df[column].fillna(method='ffill')
+    else:
+        return False
+    return df
     pass
 
 
@@ -111,6 +127,8 @@ def filter_data(df: pd.DataFrame, filters: list) -> pd.DataFrame:
         >>> filters = [{'column': 'age', 'condition': 'in_range', 'value': [18, 65]}]
         >>> df_filtered = filter_data(df, filters)
     """
+    filters = []
+
     pass
 
 
@@ -134,6 +152,7 @@ def transform_types(df: pd.DataFrame, type_map: dict) -> pd.DataFrame:
         ... }
         >>> df_typed = transform_types(df, type_map)
     """
+
     pass
 
 
@@ -197,12 +216,37 @@ if __name__ == '__main__':
     # Optional: Test your utilities here
     print("Data utilities loaded successfully!")
     print("Available functions:")
+    
     print("  - load_data()")
+    df = load_data('data/clinical_trial_raw.csv')
+    """
+    df2 = load_data('test_paper')
+    print(df2)
+    df2_filled = fill_missing(df2, 'col2', strategy='mean')
+    print(df2_filled)
+    print(detect_missing(df2_filled['col2']))
+    """
+    print(df.shape)
+
     print("  - clean_data()")
+    df_clean = clean_data(df, sentinel_value=-999)
+    print(df_clean.shape)
+
     print("  - detect_missing()")
+    missing = detect_missing(df_clean)
+    print(missing['cholesterol_total'])
+
     print("  - fill_missing()")
+    df_filled = fill_missing(df, 'cholesterol_total', strategy='median')
+    print(detect_missing(df_filled['cholesterol_total']))
     print("  - filter_data()")
+
     print("  - transform_types()")
+    type_map = {
+        'enrollment': 'datetime',
+        'age': 'numeric',
+        'site': 'category'
+    }
     print("  - create_bins()")
     print("  - summarize_by_group()")
     
