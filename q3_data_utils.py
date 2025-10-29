@@ -45,8 +45,8 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
     if remove_duplicates:
-        df = df.drop_duplicates(ignore_index=True)
-    if sentinel_value == -999:
+        df = df.drop_duplicates()
+    if sentinel_value == -999
         df = df.replace(sentinel_value, np.nan,inplace=True)
     return df
     pass
@@ -170,7 +170,8 @@ def transform_types(df: pd.DataFrame, type_map: dict) -> pd.DataFrame:
         >>> df_typed = transform_types(df, type_map)
     """
     df_transform = df.copy()
-    for col,type in type_map.items():
+    for type in type_map:
+        col = type['column']
         if type == "datetime":
             df_transform[col] = pd.to_datetime(df[col])
         elif type == "numeric":
