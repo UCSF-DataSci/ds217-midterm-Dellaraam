@@ -44,10 +44,8 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
     Example:
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
-    if remove_duplicates:
-        df = df.drop_duplicates()
-    if sentinel_value == -999
-        df = df.replace(sentinel_value, np.nan,inplace=True)
+    df.drop_duplicates()
+    df.replace(sentinel_value, np.nan,inplace=True)
     return df
     pass
 
@@ -170,18 +168,18 @@ def transform_types(df: pd.DataFrame, type_map: dict) -> pd.DataFrame:
         >>> df_typed = transform_types(df, type_map)
     """
     df_transform = df.copy()
-    for type in type_map:
-        col = type['column']
-        if type == "datetime":
-            df_transform[col] = pd.to_datetime(df[col])
-        elif type == "numeric":
-            df_transform[col] = pd.to_numeric(df_transform[col])
-        elif type == "category":
-            df_transform[col] = df_transform[col].astype("category")
-        elif type == "string":
-            df_transform[col] = df_transform[col].astype("string")
-        else:
-            return False
+    for col in df_transform:
+        for type in type_map:
+            if type == "datetime":
+                df_transform[col] = pd.to_datetime(df[col])
+            elif type == "numeric":
+                df_transform[col] = pd.to_numeric(df_transform[col])
+            elif type == "category":
+                df_transform[col] = df_transform[col].astype("category")
+            elif type == "string":
+                df_transform[col] = df_transform[col].astype("string")
+            else:
+                return False
     return df_transform
     pass
 
