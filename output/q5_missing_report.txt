@@ -7,7 +7,7 @@ bmi                    438
 enrollment_date          0
 systolic_bp            414
 diastolic_bp           414
-cholesterol_total        0
+cholesterol_total      554
 cholesterol_hdl        554
 cholesterol_ldl        554
 glucose_fasting        369

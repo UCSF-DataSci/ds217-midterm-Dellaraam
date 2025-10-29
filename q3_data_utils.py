@@ -44,8 +44,10 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
     Example:
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
-    df.drop_duplicates(inplace=True)
-    df.replace(sentinel_value, np.nan,inplace=True)
+    if remove_duplicates == True:
+        df = df.drop_duplicates(inplace=True)
+    if sentinel_value == -999:
+        df = df.replace(sentinel_value, np.nan,inplace=True)
     return df
     pass
 
