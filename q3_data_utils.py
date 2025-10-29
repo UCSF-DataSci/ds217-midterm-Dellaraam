@@ -44,8 +44,8 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
     Example:
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
-    df.drop_duplicates()
-    df.replace(sentinel_value, np.nan)
+    df.drop_duplicates(inplace=True)
+    df.replace(sentinel_value, np.nan,inplace=True)
     return df
     pass
 
@@ -128,8 +128,22 @@ def filter_data(df: pd.DataFrame, filters: list) -> pd.DataFrame:
         >>> filters = [{'column': 'age', 'condition': 'in_range', 'value': [18, 65]}]
         >>> df_filtered = filter_data(df, filters)
     """
-    
-
+    df_filtered = df.copy()
+    for f in filters:
+        col = f['column']
+        if f['condition'] == 'equals':
+            df_filtered = df_filtered[df_filtered[col] == int(f['value'])]
+        elif f['condition'] == 'greater_than':
+            df_filtered = df_filtered[df_filtered[col] > int(f['value'])]
+        elif f['condition'] == 'less_than':
+            df_filtered = df_filtered[df_filtered[col] < int(f['value'])]
+        elif f['condition'] == 'in_range':
+            df_filtered = df_filtered[(df_filtered[col] >= int(f['value'][0])) & (df_filtered[col] <= int(f['value'][1]))]
+        elif f['condition'] == 'in_list':
+            df_filtered = df_filtered[df_filtered[col].isin(f['value'])]
+        else: 
+            return False
+    return df_filtered
     pass
 
 
@@ -153,7 +167,20 @@ def transform_types(df: pd.DataFrame, type_map: dict) -> pd.DataFrame:
         ... }
         >>> df_typed = transform_types(df, type_map)
     """
-
+    df_transform = df.copy()
+    for col in df_transform:
+        for type in type_map:
+            if type == "datetime":
+                df_transform[col] = pd.to_datetime(df[col])
+            elif type == "numeric":
+                df_transform[col] = pd.to_numeric(df_transform[col])
+            elif type == "category":
+                df_transform[col] = df_transform[col].astype("category")
+            elif type == "string":
+                df_transform[col] = df_transform[col].astype("string")
+            else:
+                return False
+    return df_transform
     pass
 
 
@@ -180,6 +207,9 @@ def create_bins(df: pd.DataFrame, column: str, bins: list,
         ...     labels=['<18', '18-34', '35-49', '50-64', '65+']
         ... )
     """
+    df_bins = df.copy()
+    df_bins[new_column] = pd.cut(df_bins[column], labels=labels, bins=bins)
+    return df_bins
     pass
 
 
@@ -208,6 +238,11 @@ def summarize_by_group(df: pd.DataFrame, group_col: str,
         ...     {'age': ['mean', 'std'], 'bmi': 'mean'}
         ... )
     """
+    if agg_dict == None:
+        group_data = df.groupby(group_col).describe()
+    else:
+        group_data = df.groupby(group_col).agg(agg_dict)
+    return group_data 
     pass
 
 
@@ -241,16 +276,25 @@ if __name__ == '__main__':
     df_filled = fill_missing(df, 'cholesterol_total', strategy='median')
     print(detect_missing(df_filled['cholesterol_total']))
     print("  - filter_data()")
-
+    filters = [
+        {'column': 'age', 'condition': 'greater_than', 'value': 18},
+        {'column': 'age', 'condition': 'less_than', 'value': 65},
+        {'column': 'site', 'condition': 'in_list', 'value': ['Site A', 'Site B']}
+    ]
+    df_filtered = filter_data(df, filters)
+    print(df_filtered['age'])
     print("  - transform_types()")
     type_map = {
         'enrollment': 'datetime',
         'age': 'numeric',
         'site': 'category'
     }
+    df_typed = transform_types(df, type_map)
     print("  - create_bins()")
+    df_binned = create_bins(df,column='age',bins=[0, 18, 35, 50, 65, 100],labels=['<18', '18-34', '35-49', '50-64', '65+'])
     print("  - summarize_by_group()")
-    
+    summary = summarize_by_group(df, 'site')
+    print(summary)
     # TODO: Add simple test example here
     # Example:
     # test_df = pd.DataFrame({'age': [25, 30, 35], 'bmi': [22, 25, 28]})
