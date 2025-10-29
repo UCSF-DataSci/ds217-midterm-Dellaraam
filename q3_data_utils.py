@@ -85,15 +85,16 @@ def fill_missing(df: pd.DataFrame, column: str, strategy: str) -> pd.DataFrame:
     Example:
         >>> df_filled = fill_missing(df, 'age', strategy='median')
     """
+    df_filled = df.copy()
     if strategy == "median":
-        df[column] = df[column].fillna(df[column].median())
+        df_filled[column] = df[column].fillna(df[column].median())
     elif strategy == "mean":
-        df[column] = df[column].fillna(df[column].mean())
+        df_filled[column] = df[column].fillna(df[column].mean())
     elif strategy == "ffill":
-        df[column] = df[column].fillna(method='ffill')
+        df_filled[column] = df[column].fillna(method='ffill')
     else:
-        return False
-    return df
+        df_filled[column] = df[column]
+    return df_filled
     pass
 
 
@@ -127,7 +128,7 @@ def filter_data(df: pd.DataFrame, filters: list) -> pd.DataFrame:
         >>> filters = [{'column': 'age', 'condition': 'in_range', 'value': [18, 65]}]
         >>> df_filtered = filter_data(df, filters)
     """
-    filters = []
+    
 
     pass
 
