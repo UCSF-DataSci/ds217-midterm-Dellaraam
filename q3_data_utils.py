@@ -168,18 +168,17 @@ def transform_types(df: pd.DataFrame, type_map: dict) -> pd.DataFrame:
         >>> df_typed = transform_types(df, type_map)
     """
     df_transform = df.copy()
-    for col in df_transform:
-        for type in type_map:
-            if type == "datetime":
-                df_transform[col] = pd.to_datetime(df[col])
-            elif type == "numeric":
-                df_transform[col] = pd.to_numeric(df_transform[col])
-            elif type == "category":
-                df_transform[col] = df_transform[col].astype("category")
-            elif type == "string":
-                df_transform[col] = df_transform[col].astype("string")
-            else:
-                return False
+    for col,type in type_map.items():
+        if type == "datetime":
+            df_transform[col] = pd.to_datetime(df[col])
+        elif type == "numeric":
+            df_transform[col] = pd.to_numeric(df_transform[col])
+        elif type == "category":
+            df_transform[col] = df_transform[col].astype("category")
+        elif type == "string":
+            df_transform[col] = df_transform[col].astype("string")
+        else:
+            return False
     return df_transform
     pass
 
@@ -285,16 +284,17 @@ if __name__ == '__main__':
     print(df_filtered['age'])
     print("  - transform_types()")
     type_map = {
-        'enrollment': 'datetime',
+        'enrollment_date': 'datetime',
         'age': 'numeric',
         'site': 'category'
     }
     df_typed = transform_types(df, type_map)
+    print(df_typed)
     print("  - create_bins()")
     df_binned = create_bins(df,column='age',bins=[0, 18, 35, 50, 65, 100],labels=['<18', '18-34', '35-49', '50-64', '65+'])
+    print(df_binned)
     print("  - summarize_by_group()")
     summary = summarize_by_group(df, 'site')
-    print(summary)
     # TODO: Add simple test example here
     # Example:
     # test_df = pd.DataFrame({'age': [25, 30, 35], 'bmi': [22, 25, 28]})
