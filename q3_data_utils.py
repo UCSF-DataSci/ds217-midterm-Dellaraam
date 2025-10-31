@@ -44,9 +44,11 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
     Example:
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
-    df.drop_duplicates()
-    df.replace(sentinel_value, np.nan,inplace=True)
-    return df
+    if remove_duplicates:
+        df_clean=df.drop_duplicates()
+    if sentinel_value is not None:
+        df_clean.replace(sentinel_value, np.nan,inplace=True)
+    return df_clean
     pass
 
 
@@ -168,18 +170,18 @@ def transform_types(df: pd.DataFrame, type_map: dict) -> pd.DataFrame:
         >>> df_typed = transform_types(df, type_map)
     """
     df_transform = df.copy()
-    for col in df_transform:
-        for type in type_map:
-            if type == "datetime":
-                df_transform[col] = pd.to_datetime(df[col])
-            elif type == "numeric":
-                df_transform[col] = pd.to_numeric(df_transform[col])
-            elif type == "category":
-                df_transform[col] = df_transform[col].astype("category")
-            elif type == "string":
-                df_transform[col] = df_transform[col].astype("string")
-            else:
-                return False
+
+    for col in type_map:
+        if type_map[col] == "datetime":
+            df_transform[col] = pd.to_datetime(df_transform[col], errors='coerce')
+        elif type_map[col] == "numeric":
+            df_transform[col] = pd.to_numeric(df_transform[col])
+        elif type_map[col] == "category":
+            df_transform[col] = df_transform[col].astype("category")
+        elif type_map[col] == "string":
+            df_transform[col] = df_transform[col].astype("string")
+        else:
+            return False
     return df_transform
     pass
 
@@ -265,8 +267,8 @@ if __name__ == '__main__':
     print(df.shape)
 
     print("  - clean_data()")
-    df_clean = clean_data(df, sentinel_value=-999)
-    print(df_clean.shape)
+    df_clean = clean_data(df, sentinel_value=-999, remove_duplicates=True)
+    print(df_clean['site'])
 
     print("  - detect_missing()")
     missing = detect_missing(df_clean)
@@ -290,7 +292,7 @@ if __name__ == '__main__':
         'site': 'category'
     }
     df_typed = transform_types(df, type_map)
-    print(df_typed)
+    print(df_typed.dtypes)
     print("  - create_bins()")
     df_binned = create_bins(df,column='age',bins=[0, 18, 35, 50, 65, 100],labels=['<18', '18-34', '35-49', '50-64', '65+'])
     print(df_binned)

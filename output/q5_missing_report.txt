@@ -1,7 +1,7 @@
 Dimentions: (10000, 18)
 Missing Data:
 patient_id               0
-age                      0
+age                    200
 sex                      0
 bmi                    438
 enrollment_date          0
