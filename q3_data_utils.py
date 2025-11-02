@@ -45,9 +45,14 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
     df_clean = df.copy()
-    df_clean['site'] = df['site'].str.lower()
+    strings = df_clean.select_dtypes(include="object").columns
+    for column in strings:
+        df_clean[column] = df_clean[column].str.lower()
+        df_clean[column] = df_clean[column].str.strip()
+        df_clean[column] = df_clean[column].str.replace('  ', ' ')
+        df_clean[column] = df_clean[column].str.replace('_', ' ')
     if remove_duplicates:
-        df_clean=df.drop_duplicates()
+        df_clean=df_clean.drop_duplicates()
     if sentinel_value is not None:
         df_clean.replace(sentinel_value, np.nan,inplace=True)
     return df_clean
