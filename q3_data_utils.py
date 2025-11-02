@@ -44,6 +44,8 @@ def clean_data(df: pd.DataFrame, remove_duplicates: bool = True,
     Example:
         >>> df_clean = clean_data(df, sentinel_value=-999)
     """
+    df_clean = df.copy()
+    df_clean['site'] = df['site'].str.lower()
     if remove_duplicates:
         df_clean=df.drop_duplicates()
     if sentinel_value is not None:
